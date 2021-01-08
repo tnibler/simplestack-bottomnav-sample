@@ -20,36 +20,26 @@ class MainFragment : KeyedFragment(R.layout.bottomnav_main) {
         super.onViewCreated(view, savedInstanceState)
         val binding = BottomnavMainBinding.bind(view)
 
-        if (savedInstanceState == null) {
-            var aWasNull = false
-            var bWasNull = false
-            var cWasNull = false
-            aFragment = (childFragmentManager.findFragmentByTag("A") as? AFragment)
-                ?: AFragment().also { aWasNull = true; Log.d(TAG, "creating A") }
-            bFragment = (childFragmentManager.findFragmentByTag("B") as? BFragment)
-                ?: BFragment().also { bWasNull = true; Log.d(TAG, "creating B") }
-            cFragment = (childFragmentManager.findFragmentByTag("C") as? CFragment)
-                ?: CFragment().also { cWasNull = true; Log.d(TAG, "creating C") }
-
-            if (aWasNull || bWasNull || cWasNull) {
-                val t = childFragmentManager.beginTransaction()
-                if (aWasNull) {
+        val t  = childFragmentManager.beginTransaction()
+        aFragment = (childFragmentManager.findFragmentByTag("A") as? AFragment)
+                ?: AFragment().also { aFragment ->
+                    Log.d(TAG, "creating A")
                     t.add(R.id.bottomNavFrameLayout, aFragment, "A")
                 }
-                if (bWasNull) {
+        bFragment = (childFragmentManager.findFragmentByTag("B") as? BFragment)
+                ?: BFragment().also { bFragment ->
+                    Log.d(TAG, "creating B")
                     t.add(R.id.bottomNavFrameLayout, bFragment, "B")
                 }
-                if (cWasNull) {
+        cFragment = (childFragmentManager.findFragmentByTag("C") as? CFragment)
+                ?: CFragment().also { cFragment ->
+                    Log.d(TAG, "creating C")
                     t.add(R.id.bottomNavFrameLayout, cFragment, "C")
                 }
-                t.commitNow()
-            }
-        }
-        else {
-            selectedIndex = savedInstanceState.getInt("selectedIndex")
-            aFragment = childFragmentManager.findFragmentByTag("A") as AFragment
-            bFragment = childFragmentManager.findFragmentByTag("B") as BFragment
-            cFragment = childFragmentManager.findFragmentByTag("C") as CFragment
+        t.commitNow()
+
+        savedInstanceState?.let {
+            selectedIndex = it.getInt("selectedIndex")
         }
 
         val selectedFragment = fragments[selectedIndex]
